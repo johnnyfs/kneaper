@@ -1,0 +1,12 @@
+[[worker]]
+
+[worker.config]
+id = "demo-worker"
+enabled = true
+timeout = 30
+retries = 3
+secret = "04914f456190905330aa1468fd04bddb"
+[worker.local_source]
+packages = [ "./dgraph",]
+[worker.pypi_source]
+packages = [ "pydgraph"]

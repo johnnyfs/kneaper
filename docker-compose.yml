@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  zero:
+    image: dgraph/dgraph:latest
+    command: dgraph zero --my=zero:5080
+    ports:
+      - "5080:5080"
+      - "6080:6080"
+    volumes:
+      - zero:/dgraph
+
+  alpha:
+    image: dgraph/dgraph:latest
+    depends_on: [zero]
+    command: >
+      dgraph alpha
+      --my=alpha:7080
+      --zero=zero:5080
+      --security whitelist=0.0.0.0/0
+      --acl secret-file=/dgraph/acl/hmac_secret_file
+    ports:
+      - "8080:8080"   # HTTP / GraphQL (/graphql, /admin, /alter)
+      - "9080:9080"   # gRPC (client)
+    volumes:
+      - alpha:/dgraph
+      - ./hmac_secret_file:/dgraph/acl/hmac_secret_file:ro
+
+  init:
+    image: curlimages/curl:8.9.1
+    depends_on: [alpha]
+    entrypoint: ["/bin/sh","-c"]
+    command: |
+      set -e;
+      echo "Waiting for alpha...";
+      for i in $(seq 1 30); do
+        if curl -sf http://alpha:8080/health >/dev/null; then break; fi
+        sleep 2;
+      done;
+
+      echo "Login as groot...";
+      TOKEN=$(curl -s http://alpha:8080/admin \
+        -H "Content-Type: application/graphql" \
+        --data-binary 'mutation { login(userId:"groot", password:"password"){ response { accessJWT } } }' \
+        | sed -n 's/.*"accessJWT":"\([^"]*\)".*/\1/p')
+
+
+      echo "Create user username/password...";
+      curl -s http://alpha:8080/admin \
+        -H "Content-Type: application/graphql" \
+        -H "X-Dgraph-AccessToken: $TOKEN" \
+        --data-binary "mutation { addUser(input:[{ name:\"username\", password:\"password\" }]) { user { name } } }";
+
+      echo "Done."
+
+volumes:
+  zero:
+  alpha:
+
