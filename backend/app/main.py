@@ -42,6 +42,9 @@ def query(context: RunContext[DGraphAgentContext], query: str) -> dict:
     result = context.deps.client.tools.execute(tool_name="DGraph.query", input={"query": query})
     return result
 
+# Note the tool naming appears to get wonky -- I probably should be consuming declared names
+# from the client rather than hardcoding them here?
+
 @dgraph_test.tool
 def alter_schema(context: RunContext[DGraphAgentContext], schema_: str) -> dict:
     """
