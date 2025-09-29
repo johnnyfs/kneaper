@@ -67,7 +67,7 @@ async def alter_schema(
     return {} # None breaks stuff?
 
 @tool(requires_secrets=["DGRAPH_ADDR", "DGRAPH_USERNAME", "DGRAPH_PASSWORD"])
-async def get_schema(
+async def get_Schema_(
     context: ToolContext,
     namespace: Annotated[str | None, "Optional namespace for the schema."] = None,
 ) -> dict[str, Any]:

@@ -47,7 +47,7 @@ def alter_schema(context: RunContext[DGraphAgentContext], schema_: str) -> dict:
     """
     Alter or extend the DGraph schema.
     """
-    result = context.deps.client.tools.execute(tool_name="DGraph.alter_schema", input={"schema_": schema_})
+    result = context.deps.client.tools.execute(tool_name="DGraph.AlterSchema", input={"schema_": schema_})
     return result
 
 @dgraph_test.tool
@@ -55,7 +55,7 @@ def get_schema(context: RunContext[DGraphAgentContext]) -> dict:
     """
     Get the current DGraph schema.
     """
-    result = context.deps.client.tools.execute(tool_name="DGraph.get_schema", input={})
+    result = context.deps.client.tools.execute(tool_name="DGraph.getschema_")
     return result
 
 async def main():

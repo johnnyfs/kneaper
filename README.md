@@ -67,4 +67,66 @@ poetry install
 poetry run python app/main.py
 ```
 
+## Example interaction
+
+```
+> Create several nodes of type Person, each with a unique name. make some hooligans and some tattletales. create arbitrary knowing relations between them (Mary knows John, for example). Make some of them reciprocal
+...
+Assistant: Done. I created six Person nodes with names and roles, and added directed and some reciprocal knows edges:
+- Mary (hooligan) — knows —> John (tattletale) [reciprocal]
+- John (tattletale) — knows —> Mary (hooligan) [reciprocal]
+- Alice (hooligan) — knows —> Bob (tattletale) [reciprocal]
+- Bob (tattletale) — knows —> Alice (hooligan) [reciprocal]
+- Carol (hooligan) — knows —> Dave (tattletale)
+- Dave (tattletale) — knows —> Alice (hooligan)
+- Bob (tattletale) — knows —> Mary (hooligan)
+- Carol (hooligan) — knows —> Mary (hooligan)
+
+UIDs assigned:
+- Mary: 0x4e46
+- John: 0x4e41
+- Alice: 0x4e42
+- Bob: 0x4e43
+- Carol: 0x4e44
+- Dave: 0x4e45
+
+Would you like me to run a query to show the graph, or add/remove any relations?
+> query the graph for every tattletale who knows a hooligan
+...
+Assistant: I ran a query and found these tattletales who know at least one hooligan:
+
+- John (uid: 0x4e41)
+  - knows: Mary (hooligan, uid: 0x4e46)
+
+- Bob (uid: 0x4e43)
+  - knows: Alice (hooligan, uid: 0x4e42)
+  - knows: Mary (hooligan, uid: 0x4e46)
+
+- Dave (uid: 0x4e45)
+  - knows: Alice (hooligan, uid: 0x4e42)
+
+Note: I fetched all Person nodes and filtered by role client-side because the predicate "role" is not indexed. If you want a DGraph-side filter, I can add an exact/string index to the role predicate and rerun a query that directly selects tattletales. Would you like me to do that?
+> go for it
+...
+What I changed
+- Schema: role: string @index(exact) .
+
+Query run
+- DQL: { tattletales(func: eq(role, "tattletale")) { uid name role } }
+
+Results (tattletales)
+- uid 0x4e41 — John
+- uid 0x4e43 — Bob
+- uid 0x4e45 — Dave
+- uid 0x4e49 — John
+- uid 0x4e4b — Bob
+- uid 0x4e4d — Diana
+
+Notes / next steps
+- You can now use eq(role, "<value>") to filter by role in DQL.
+- eq is case-sensitive and matches the exact string. If you need case-insensitive matching or partial/token matches (e.g., substring search), I can add a different index type (term, trigram) or maintain a normalized lowercase predicate for role.
+- If you want, I can also remove duplicate-name nodes, dedupe by some other predicate, or run further queries (counts, relationships, etc.).
+
+Would you like any of the above (case-insensitive index, trigram index, dedupe, or additional queries)?
+```
 
