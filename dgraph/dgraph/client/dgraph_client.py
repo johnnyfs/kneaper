@@ -75,7 +75,7 @@ class DGraphClient:
         txn = self._client.txn(read_only=True)
         try:
             res = await asyncio.to_thread(txn.query, query)
-            return json.loads(res.json) if res.json else {}
+            return json.loads(res.json) if res.json else {} # type: ignore
         finally:
             txn.discard()
 
@@ -104,7 +104,7 @@ class DGraphClient:
         txn = self._client.txn(read_only=True)
         try:
             res = await asyncio.to_thread(txn.query, query)
-            return json.loads(res.json) if res.json else {}
+            return json.loads(res.json) if res.json else {} # type: ignore
         finally:
             txn.discard()
 

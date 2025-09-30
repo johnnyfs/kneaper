@@ -5,9 +5,9 @@ from app.schemas import IRI, UID, Facet, Literal, NQuad, BlankNode
 def test_nquad_rendering() -> None:
     nquads = [
         NQuad(
-            subject=IRI("http://example.org/subject"),
-            predicate=IRI("http://example.org/predicate"),
-            object=Literal("object value"),
+            subject=IRI(iri="http://example.org/subject"),
+            predicate=IRI(iri="http://example.org/predicate"),
+            object=Literal(value="object value"),
             facets=[
                 Facet(key="facet1", value="value1"),
                 Facet(key="facet2", value=2),
@@ -15,32 +15,32 @@ def test_nquad_rendering() -> None:
                 Facet(key="facet4", value=True),
                 Facet(key="facet5", value=datetime(2020, 1, 1, 12, 0, 0, tzinfo=timezone.utc)),
             ],
-            graph=IRI("http://example.org/graph"),
+            graph=IRI(iri="http://example.org/graph"),
         ),
         NQuad(
-            subject=BlankNode("b1"),
-            predicate=IRI("http://example.org/knows"),
-            object=BlankNode("b2")
+            subject=BlankNode(label="b1"),
+            predicate=IRI(iri="http://example.org/knows"),
+            object=BlankNode(label="b2")
         ),
         NQuad(
-            subject=UID("0x14e"),
-            predicate=IRI("http://example.org/name"),
-            object=UID("0x15f")
+            subject=UID(uid="0x14e"),
+            predicate=IRI(iri="http://example.org/name"),
+            object=UID(uid="0x15f")
         ),
         NQuad(
-            subject=BlankNode("b2"),
-            predicate=IRI("http://example.org/name"),
-            object=Literal("Alice", lang="en")
+            subject=BlankNode(label="b2"),
+            predicate=IRI(iri="http://example.org/name"),
+            object=Literal(value="Alice", lang="en")
         ),
         NQuad(
-            subject=BlankNode("b3"),
-            predicate=IRI("http://example.org/age"),
-            object=Literal(30)
+            subject=BlankNode(label="b3"),
+            predicate=IRI(iri="http://example.org/age"),
+            object=Literal(value=30)
         ),
         NQuad(
-            subject=BlankNode("b3"),
-            predicate=IRI("http://example.org/name"),
-            object=Literal(datetime(2020, 1, 1, 12, 0, 0, tzinfo=timezone.utc), xsd="xsd:dateTime")
+            subject=BlankNode(label="b3"),
+            predicate=IRI(iri="http://example.org/name"),
+            object=Literal(value=datetime(2020, 1, 1, 12, 0, 0, tzinfo=timezone.utc), xsd="xsd:dateTime")
         )
     ]
     rendered = NQuad.render(nquads)

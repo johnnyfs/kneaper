@@ -1,10 +1,10 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-# I created these to enforce syntax for mutations before realing
-#  - Arcade tools do not support Union types.
+# I created these to enforce syntax for mutations before realizing
+#  - Arcade tools do not support Union type arguments.
 #  - The gpt5-mini produces reliably valid syntax.
-# Keeping them since they are already validated and might be useful
+# I'm keeping them here since they are already validated and might be useful
 # as guiderails for cheaper models.
 
 class UID(BaseModel):
@@ -29,7 +29,7 @@ NodeRef = UID | IRI | BlankNode
 
 
 class Literal(BaseModel):
-    value: str # | int | float | bool | datetime
+    value: str | int | float | bool | datetime
     xsd: str | None = None    # e.g. "xsd:string", "xsd:integer", "xsd:dateTime"
     lang: str | None = None   # e.g. "en", "fr"
 
@@ -68,7 +68,7 @@ class Literal(BaseModel):
 
 class Facet(BaseModel):
     key: str
-    value: str # | int | float | bool | datetime
+    value: str | int | float | bool | datetime
 
     def to_bytes(self) -> bytes:
         v = self.value
@@ -85,9 +85,9 @@ class Facet(BaseModel):
 
 
 class NQuad(BaseModel):
-    subject: IRI # NodeRef
+    subject: NodeRef
     predicate: IRI
-    object: Literal # NodeRef | Literal
+    object: NodeRef | Literal
     facets: list[Facet] | None = None
     graph: IRI | None = None
 

@@ -64,6 +64,7 @@ From the project root:
 cd backend
 poetry env use 3.13.7
 poetry install
+poetry run pytest tests
 poetry run python app/main.py
 ```
 
@@ -132,3 +133,6 @@ poetry run python app/main.py
 >
 >Would you like any of the above (case-insensitive index, trigram index, dedupe, or additional queries)?
 
+## LLMs consulted
+
+I used GPT5 to resolve questions about DGraph usage and VS Code copilot with Sonnet to write the code. (Not Cursor because it is dead to me since they disabled move refactors.)

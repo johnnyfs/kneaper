@@ -8,3 +8,6 @@ package-mode = false
 python = "3.13.7"
 arcadepy = "^1.8.0"
 pydantic-ai = "^1.0.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.2"
